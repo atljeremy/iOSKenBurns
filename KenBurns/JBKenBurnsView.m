@@ -5,27 +5,27 @@
 //  Created by Javier Berlana on 9/23/11.
 //  Copyright (c) 2011, Javier Berlana
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of this 
-//  software and associated documentation files (the "Software"), to deal in the Software 
-//  without restriction, including without limitation the rights to use, copy, modify, merge, 
-//  publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons 
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of this
+//  software and associated documentation files (the "Software"), to deal in the Software
+//  without restriction, including without limitation the rights to use, copy, modify, merge,
+//  publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 //  to whom the Software is furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all copies 
+//  The above copyright notice and this permission notice shall be included in all copies
 //  or substantial portions of the Software.
 //
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-//  PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
-//  FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
-//  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+//  PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+//  FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+//  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 //  IN THE SOFTWARE.
 //
 
 #import "JBKenBurnsView.h"
 #include <stdlib.h>
 
-#define enlargeRatio 1.2
+#define enlargeRatio 0.8
 #define imageBufer 3
 
 // Private interface
@@ -139,7 +139,7 @@
         
         [self performSelectorOnMainThread:@selector(_animate:)
                                withObject:[NSNumber numberWithInt:0]
-                            waitUntilDone:YES];            
+                            waitUntilDone:YES];
         
         [self.imagesArray removeObjectAtIndex:0];
         [self.imagesArray addObject:[self _downloadImageFrom:[urls objectAtIndex: urlIndex]]];
@@ -152,7 +152,7 @@
         }
         
         bufferIndex++;
-        urlIndex = (urlIndex == [urls count]-1) && isLoop ? -1 : urlIndex; 
+        urlIndex = (urlIndex == [urls count]-1) && isLoop ? -1 : urlIndex;
         
         sleep(self.timeTransition);
     }
@@ -165,19 +165,19 @@
     UIImage* image = [self.imagesArray objectAtIndex:[num intValue]];
     UIImageView *imageView;
     
-    float resizeRatio   = -1;
-    float widthDiff     = -1;
-    float heightDiff    = -1;
-    float originX       = -1;
-    float originY       = -1;
-    float zoomInX       = -1;
-    float zoomInY       = -1;
-    float moveX         = -1;
-    float moveY         = -1;
+    float resizeRatio   = -0.5;
+    float widthDiff     = -0.5;
+    float heightDiff    = -0.5;
+    float originX       = -0.5;
+    float originY       = -0.5;
+    float zoomInX       = -0.5;
+    float zoomInY       = -0.5;
+    float moveX         = -0.5;
+    float moveY         = -0.5;
     float frameWidth    = isLandscape? self.frame.size.width : self.frame.size.height;
     float frameHeight   = isLandscape? self.frame.size.height : self.frame.size.width;
     
-    // Widder than screen 
+    // Widder than screen
     if (image.size.width > frameWidth)
     {
         widthDiff  = image.size.width - frameWidth;
@@ -187,7 +187,7 @@
         {
             heightDiff = image.size.height - frameHeight;
             
-            if (widthDiff > heightDiff) 
+            if (widthDiff > heightDiff)
                 resizeRatio = frameHeight / image.size.height;
             else
                 resizeRatio = frameWidth / image.size.width;
@@ -198,7 +198,7 @@
         {
             heightDiff = frameHeight - image.size.height;
             
-            if (widthDiff > heightDiff) 
+            if (widthDiff > heightDiff)
                 resizeRatio = frameWidth / image.size.width;
             else
                 resizeRatio = self.bounds.size.height / image.size.height;
@@ -215,7 +215,7 @@
         {
             heightDiff = image.size.height - frameHeight;
             
-            if (widthDiff > heightDiff) 
+            if (widthDiff > heightDiff)
                 resizeRatio = image.size.height / frameHeight;
             else
                 resizeRatio = frameWidth / image.size.width;
@@ -226,7 +226,7 @@
         {
             heightDiff = frameHeight - image.size.height;
             
-            if (widthDiff > heightDiff) 
+            if (widthDiff > heightDiff)
                 resizeRatio = frameWidth / image.size.width;
             else
                 resizeRatio = frameHeight / image.size.height;
@@ -239,8 +239,8 @@
     imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, optimusWidth, optimusHeight)];
     
     // Calcule the maximum move allowed.
-    float maxMoveX = optimusWidth - frameWidth;
-    float maxMoveY = optimusHeight - frameHeight;
+    float maxMoveX = optimusWidth - frameHeight;
+    float maxMoveY = optimusHeight - frameWidth;
     
     float rotation = (arc4random() % 9) / 100;
     
@@ -256,7 +256,7 @@
             
         case 1:
             originX = 0;
-            originY = frameHeight - optimusHeight;
+            originY = frameWidth - optimusHeight;
             zoomInX = 1.10;
             zoomInY = 1.10;
             moveX   = -maxMoveX;
@@ -265,7 +265,7 @@
             
             
         case 2:
-            originX = frameWidth - optimusWidth;
+            originX = 0;
             originY = 0;
             zoomInX = 1.30;
             zoomInY = 1.30;
@@ -274,8 +274,8 @@
             break;
             
         case 3:
-            originX = frameWidth - optimusWidth;
-            originY = frameHeight - optimusHeight;
+            originX = frameHeight - optimusWidth;
+            originY = frameWidth - optimusHeight;
             zoomInX = 1.20;
             zoomInY = 1.20;
             moveX   = maxMoveX;
@@ -289,7 +289,7 @@
     
     CALayer *picLayer    = [CALayer layer];
     picLayer.contents    = (id)image.CGImage;
-    picLayer.anchorPoint = CGPointMake(0, 0); 
+    picLayer.anchorPoint = CGPointMake(0, 0);
     picLayer.bounds      = CGRectMake(0, 0, optimusWidth, optimusHeight);
     picLayer.position    = CGPointMake(originX, originY);
     
@@ -331,11 +331,11 @@
         if([self.delegate respondsToSelector:@selector(didShowImageAtIndex:)])
         {
             [self.delegate didShowImageAtIndex:[imageIndex intValue]];
-        }      
+        }
         
-        if ([imageIndex intValue] == ([self.imagesArray count]-1) && !isLoop && [self.delegate respondsToSelector:@selector(didFinishAllAnimations)]) {            
-            [self.delegate didFinishAllAnimations];        
-        } 
+        if ([imageIndex intValue] == ([self.imagesArray count]-1) && !isLoop && [self.delegate respondsToSelector:@selector(didFinishAllAnimations)]) {
+            [self.delegate didFinishAllAnimations];
+        }
     }
     
 }
