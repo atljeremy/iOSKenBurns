@@ -1,6 +1,8 @@
 iOS Ken Burns effect
 ====================
 
+This is an updated version of iOSKenBurns to present better on iPhone. It reduces the amount of zooming and slows animations.
+
 The goal of this project is to create a `UIView` that can generate a Ken Burns transition when given an array of `UIImage` objects.
 
 To use it, you simply need to an an instance of `JBKenBurnsView` and call this method to start the action:
